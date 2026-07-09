@@ -138,6 +138,27 @@ class TodoViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
+    def test_detail_get_fali(self):
+        client = Client()
+        response = client.get('/1/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_post_success(self):
+        task = Task(title='task1', due_at=timezone.make_aware(datetime(2026, 6, 25)))
+        task.save()
+        client = Client()
+        response = client.post('/{}/delete'.format(task.pk), follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/index.html')
+        self.assertEqual(len(response.context['tasks']), 0)
+
+    def test_delete_post_fail(self):
+        client = Client()
+        response = client.post('/1/delete', follow=True)
+
+        self.assertEqual(response.status_code, 404)
     def test_close_task(self):
         task = Task(title='task1', due_at=timezone.make_aware(datetime(2026, 6, 25)))
         task.save()
