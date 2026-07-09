@@ -116,4 +116,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'css']
+# 静的ファイルはプロジェクト直下の `static/` にあるため、正しいパスに修正
+STATICFILES_DIRS = [BASE_DIR / 'static']
