@@ -108,8 +108,69 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(response.templates[0].name, 'todo/detail.html')
         self.assertEqual(response.context['task'], task)
 
+    def test_update_get_success(self):
+        task = Task(title='task1', due_at=timezone.make_aware(datetime(2026, 6, 25)))
+        task.save()
+        client = Client()
+        response = client.get('/{}/update'.format(task.pk))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/edit.html')
+        self.assertEqual(response.context['task'], task)
+
+    def test_update_post_success(self):
+        task = Task(title='task1', due_at=timezone.make_aware(datetime(2026, 6, 25)))
+        task.save()
+        client = Client()
+        data = {'title': 'Updated Task', 'due_at': '2026-06-30 23:59:59'}
+        response = client.post('/{}/update'.format(task.pk), data)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/{}/'.format(task.pk))
+
+        updated_task = Task.objects.get(pk=task.pk)
+        self.assertEqual(updated_task.title, 'Updated Task')
+        self.assertEqual(updated_task.due_at, timezone.make_aware(datetime(2026, 6, 30, 23, 59, 59)))
+
     def test_detail_get_fali(self):
         client = Client()
         response = client.get('/1/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_detail_get_fali(self):
+        client = Client()
+        response = client.get('/1/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_post_success(self):
+        task = Task(title='task1', due_at=timezone.make_aware(datetime(2026, 6, 25)))
+        task.save()
+        client = Client()
+        response = client.post('/{}/delete'.format(task.pk), follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/index.html')
+        self.assertEqual(len(response.context['tasks']), 0)
+
+    def test_delete_post_fail(self):
+        client = Client()
+        response = client.post('/1/delete', follow=True)
+
+        self.assertEqual(response.status_code, 404)
+    def test_close_task(self):
+        task = Task(title='task1', due_at=timezone.make_aware(datetime(2026, 6, 25)))
+        task.save()
+        client = Client()
+        response = client.get('/{}/close'.format(task.pk))
+
+        self.assertEqual(response.status_code, 302)
+        task.refresh_from_db()
+        self.assertTrue(task.completed)
+
+    def test_close_task_not_found(self):
+        client = Client()
+        response = client.get('/1/close')
 
         self.assertEqual(response.status_code, 404)
