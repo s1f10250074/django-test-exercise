@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <title>Project List</title>
+  <meta charset="UTF-8">
+  <meta name="author" content="INIAD">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+
+<body>
+  <h1>Projects</h1>
+  <p>プロジェクトごとの進捗を確認できます。</p>
+
+  {% for item in projects %}
+  <div class="text">
+    <h2><a href="{% url 'project_detail' item.project.id %}">{{ item.project.name }}</a></h2>
+    <ul>
+      <li>Tasks: {{ item.total }}</li>
+      <li>Completed: {{ item.completed }}</li>
+      <li>Progress: {{ item.progress }}%</li>
+    </ul>
+    <div>
+      <a href="{% url 'project_update' item.project.id %}">Edit</a>
+      |
+      <a href="{% url 'project_delete' item.project.id %}">Delete</a>
+    </div>
+  </div>
+  {% empty %}
+  <p>まだプロジェクトがありません。</p>
+  {% endfor %}
+
+  <div>
+    <a href="{% url 'index' %}">Top</a>
+  </div>
+</body>
+
+</html>

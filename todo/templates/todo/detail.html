@@ -16,6 +16,9 @@
     {% if task.due_at %}
     <li>Due at: {{ task.due_at }}</li>
     {% endif %}
+    {% if task.project %}
+    <li>Project: {{ task.project.name }}</li>
+    {% endif %}
     {% if task.completed %}
     <li>Status: Completed</li>
     {% else %}

@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.utils import timezone
 from datetime import datetime
-from todo.models import Task
+from todo.models import Project, Task
 
 
 # Create your tests here.
@@ -54,6 +54,15 @@ class TaskModelTestCase(TestCase):
         self.assertFalse(task.is_overdue(current))
 
 
+class ProjectModelTestCase(TestCase):
+    def test_create_project(self):
+        project = Project(name='Study')
+        project.save()
+
+        project = Project.objects.get(pk=project.pk)
+        self.assertEqual(project.name, 'Study')
+
+
 class TodoViewTestCase(TestCase):
     def test_index_get(self):
         client = Client()
@@ -62,6 +71,7 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'todo/index.html')
         self.assertEqual(len(response.context['tasks']), 0)
+        self.assertEqual(len(response.context['projects']), 0)
 
     def test_index_post(self):
         client = Client()
@@ -97,6 +107,18 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(response.templates[0].name, 'todo/index.html')
         self.assertEqual(response.context['tasks'][0], task1)
         self.assertEqual(response.context['tasks'][1], task2)
+
+    def test_index_post_with_project(self):
+        project = Project(name='Work')
+        project.save()
+        client = Client()
+        data = {'title': 'Project Task', 'due_at': '2026-06-24 23:59:59', 'project': project.pk}
+        response = client.post('/', data)
+
+        self.assertEqual(response.status_code, 200)
+        task = Task.objects.get(title='Project Task')
+        self.assertEqual(task.project, project)
+        self.assertIn(project, response.context['projects'])
 
     def test_detail_get_success(self):
         task = Task(title='task1', due_at=timezone.make_aware(datetime(2026, 6, 25)))
