@@ -34,7 +34,8 @@
   </div>
   <div>
     <a href="{% url 'index' %}">All Tasks</a> |
-    <a href="{% url 'index' %}?filter=active">Not Completed Tasks</a>
+    <a href="{% url 'index' %}?filter=active">Not Completed Tasks</a> |
+    <a href="{% url 'index' %}?filter=completed">Completed Tasks</a>
   </div>
 
   {% for task in tasks %}
