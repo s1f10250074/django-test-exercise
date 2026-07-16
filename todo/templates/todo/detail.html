@@ -27,7 +27,11 @@
       <a href="{% url 'index' %}">Top</a>
       | <a href="{% url 'update' task.id %}">Edit</a>
       | <a href="{% url 'delete' task.id %}">Delete</a>
-      | <a href="{% url 'close' task.id %}">Close</a>
+      {% if task.completed %}
+        | <a href="{% url 'close' task.id %}">Reopen</a>
+      {% else %}
+        | <a href="{% url 'close' task.id %}">Close</a>
+      {% endif %}
     </div>
   </body>
 
