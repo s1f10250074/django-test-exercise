@@ -33,6 +33,22 @@
     <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
   </div>
 
+  <div style="background: #f8f9fa; border-left: 5px solid #3498db; padding: 10px; margin: 15px 0; border-radius: 4px;">
+    <strong>タスクの状況:</strong>
+    全 <span>{{ tasks|length }}</span> 件中、
+    未完了は <span style="color: #e74c3c; font-weight: bold;">
+      {% with active_tasks=tasks|regroup:"completed" by completed %}
+      {% if active_tasks.0.grouper == False %}
+      {{ active_tasks.0.list|length }}
+      {% elif active_tasks.1.grouper == False %}
+      {{ active_tasks.1.list|length }}
+      {% else %}
+      0
+      {% endif %}
+      {% endwith %}
+    </span> 件
+  </div>
+
   {% for task in tasks %}
   <div class="text">
     <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
