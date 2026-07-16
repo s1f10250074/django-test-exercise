@@ -23,6 +23,19 @@
       <input id="dueInput" name="due_at" type="datetime-local">
     </div>
     <div>
+      <label for="projectInput">Project</label><br>
+      <select id="projectInput" name="project">
+        <option value="">-- No project --</option>
+        {% for project in projects %}
+        <option value="{{ project.id }}">{{ project.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="projectNameInput">New Project Name</label><br>
+      <input id="projectNameInput" name="project_name" type="text" placeholder="Create new project">
+    </div>
+    <div>
       <button type="submit">Submit</button>
     </div>
   </form>
@@ -30,7 +43,8 @@
 
   <div>
     <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
-    <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
+    <a href="{% url 'index' %}?order=post">Sort by Posted Date</a> |
+    <a href="{% url 'project_list' %}">View Projects</a>
   </div>
 
   {% for task in tasks %}
@@ -40,6 +54,9 @@
       <li>Posted at: {{ task.posted_at }}</li>
       {% if task.due_at %}
       <li>Due at: {{ task.due_at }}</li>
+      {% endif %}
+      {% if task.project %}
+      <li>Project: <a href="{% url 'project_detail' task.project.id %}">{{ task.project.name }}</a></li>
       {% endif %}
       {% if task.completed %}
       <li>Status: Completed</li>

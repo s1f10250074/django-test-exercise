@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <title>Edit Project</title>
+  <meta charset="UTF-8">
+  <meta name="author" content="INIAD">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+
+<body>
+  <h1>Edit Project</h1>
+  <form action="{% url 'project_update' project.id %}" method="post">
+    {% csrf_token %}
+    <div>
+      <label for="nameInput">Project Name</label><br>
+      <input id="nameInput" name="name" type="text" value="{{ project.name }}">
+    </div>
+    <div>
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+  <div>
+    <a href="{% url 'project_detail' project.id %}">Back</a>
+  </div>
+</body>
+
+</html>

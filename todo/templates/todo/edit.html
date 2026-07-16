@@ -23,6 +23,19 @@
       <input id="dueInput" name="due_at" type="datetime-local" value="{{ task.due_at |date:" Y-m-d H:i" }}">
     </div>
     <div>
+      <label for="projectInput">Project</label><br>
+      <select id="projectInput" name="project">
+        <option value="">-- No project --</option>
+        {% for project in projects %}
+        <option value="{{ project.id }}" {% if task.project and task.project.id == project.id %}selected{% endif %}>{{ project.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="projectNameInput">New Project Name</label><br>
+      <input id="projectNameInput" name="project_name" type="text" placeholder="Create new project">
+    </div>
+    <div>
       <button type="submit">Submit</button>
     </div>
   </form>
