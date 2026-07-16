@@ -9,6 +9,7 @@ from todo.models import Task
 def index(request):
     if request.method == 'POST':
         task = Task(title=request.POST['title'],
+                    description=request.POST.get('description', ''),
                     due_at=make_aware(parse_datetime(request.POST['due_at'])))
         task.save()
 
@@ -43,6 +44,7 @@ def update(request, task_id):
 
     if request.method == 'POST':
         task.title = request.POST['title']
+        task.description = request.POST.get('description', '')
         task.due_at = make_aware(parse_datetime(request.POST['due_at']))
         task.save()
         return redirect(detail, task_id)
