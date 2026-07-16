@@ -58,6 +58,7 @@
       {% else %}
       <li>Due at: {{ task.due_at }}</li>
       {% endif %}
+      {% endif %}
       {% if task.project %}
       <li>Project: <a href="{% url 'project_detail' task.project.id %}">{{ task.project.name }}</a></li>
       {% endif %}
