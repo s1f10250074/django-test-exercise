@@ -132,6 +132,18 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(updated_task.title, 'Updated Task')
         self.assertEqual(updated_task.due_at, timezone.make_aware(datetime(2026, 6, 30, 23, 59, 59)))
 
+    def test_update_post_preserves_existing_values_when_empty(self):
+        task = Task(title='task1', due_at=timezone.make_aware(datetime(2026, 6, 25)))
+        task.save()
+        client = Client()
+        data = {'title': '', 'due_at': ''}
+        response = client.post('/{}/update'.format(task.pk), data)
+
+        self.assertEqual(response.status_code, 302)
+        updated_task = Task.objects.get(pk=task.pk)
+        self.assertEqual(updated_task.title, 'task1')
+        self.assertEqual(updated_task.due_at, timezone.make_aware(datetime(2026, 6, 25)))
+
     def test_detail_get_fali(self):
         client = Client()
         response = client.get('/1/')
