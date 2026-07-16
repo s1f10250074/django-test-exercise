@@ -37,15 +37,14 @@
     <strong>タスクの状況:</strong>
     全 <span>{{ tasks|length }}</span> 件中、
     未完了は <span style="color: #e74c3c; font-weight: bold;">
-      {% with active_tasks=tasks|regroup:"completed" by completed %}
-      {% if active_tasks.0.grouper == False %}
-      {{ active_tasks.0.list|length }}
-      {% elif active_tasks.1.grouper == False %}
-      {{ active_tasks.1.list|length }}
-      {% else %}
-      0
+      {% regroup tasks by completed as task_groups %}
+      {% for group in task_groups %}
+      {% if group.grouper == False %}
+      {{ group.list|length }}
       {% endif %}
-      {% endwith %}
+      {% empty %}
+      0
+      {% endfor %}
     </span> 件
   </div>
 
