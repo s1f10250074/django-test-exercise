@@ -37,6 +37,21 @@
     <a href="{% url 'index' %}?filter=active">Not Completed Tasks</a>
   </div>
 
+  <div style="background: #f8f9fa; border-left: 5px solid #3498db; padding: 10px; margin: 15px 0; border-radius: 4px;">
+    <strong>タスクの状況:</strong>
+    全 <span>{{ tasks|length }}</span> 件中、
+    未完了は <span style="color: #e74c3c; font-weight: bold;">
+      {% regroup tasks by completed as task_groups %}
+      {% for group in task_groups %}
+      {% if group.grouper == False %}
+      {{ group.list|length }}
+      {% endif %}
+      {% empty %}
+      0
+      {% endfor %}
+    </span> 件
+  </div>
+
   {% for task in tasks %}
   <div class="text">
     <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
