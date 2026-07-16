@@ -39,7 +39,11 @@
     <ul>
       <li>Posted at: {{ task.posted_at }}</li>
       {% if task.due_at %}
+      {% if not task.completed and task.is_overdue %}
+      <li style="color: #e74c3c; font-weight: bold;">Due at: {{ task.due_at }} (期限切れ！)</li>
+      {% else %}
       <li>Due at: {{ task.due_at }}</li>
+      {% endif %}
       {% endif %}
       {% if task.completed %}
       <li>Status: Completed</li>
