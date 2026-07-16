@@ -17,7 +17,11 @@ class Task(models.Model):
     due_at = models.DateTimeField(null=True, blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name='tasks')
 
-    def is_overdue(self, dt):
+    def is_overdue(self, dt=None):
         if self.due_at is None:
             return False
+        
+        if dt is None:
+            dt = timezone.now()
+            
         return self.due_at < dt
