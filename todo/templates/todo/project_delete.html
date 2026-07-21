@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <title>Delete Project</title>
+  <meta charset="UTF-8">
+  <meta name="author" content="INIAD">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+
+<body>
+  <h1>Delete Project</h1>
+  <p>本当に「{{ project.name }}」を削除しますか？</p>
+  <form action="{% url 'project_delete' project.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+  </form>
+  <div>
+    <a href="{% url 'project_detail' project.id %}">Back</a>
+  </div>
+</body>
+
+</html>
