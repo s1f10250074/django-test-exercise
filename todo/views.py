@@ -19,11 +19,14 @@ def index(request):
                 project = Project.objects.get(pk=project_id)
 
         due_at = request.POST.get('due_at')
+        
         task = Task(
             title=request.POST['title'],
+            description=request.POST.get('description', ''),
             due_at=make_aware(parse_datetime(due_at)) if due_at else None,
             project=project,
         )
+        
         task.save()
 
     tasks = Task.objects.all()
@@ -76,8 +79,11 @@ def update(request, task_id):
                 project = Project.objects.get(pk=project_id)
 
         task.title = request.POST['title']
+
+        task.description = request.POST.get('description', '')
         task.due_at = make_aware(parse_datetime(request.POST['due_at'])) if request.POST.get('due_at') else None
         task.project = project
+
         task.save()
         return redirect(detail, task_id)
 

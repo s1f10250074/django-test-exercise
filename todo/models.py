@@ -12,6 +12,7 @@ class Project(models.Model):
 
 class Task(models.Model):
     title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
     completed = models.BooleanField(default=False)
     posted_at = models.DateTimeField(default=timezone.now)
     due_at = models.DateTimeField(null=True, blank=True)
